@@ -9,22 +9,16 @@ const config = {
     channelSecret: process.env.CHANNEL_SECRET,
 }
 
-console.log(config);
-
 const client = new line.Client(config);
 
-router.use('/callback', line.middleware(config));
-
-router.post('/callback', async (req, res) => {
-    console.log('***************************** line callback!');
-    console.log(JSON.stringify(req.body, undefined, 2));
-    Promise
-    .all(req.body.events.map(handleEvent))
-    .then((result) => res.json(result))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).end();
-    });
+router.post('/callback', line.middleware(config), async (req, res) => {
+    try {
+        const result = await Promise.all(req.body.events.map(handleEvent));
+        return res.json(result);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).end();
+    }
 });
 
 async function handleEvent(event) {
@@ -38,19 +32,19 @@ async function handleEvent(event) {
     if (_.startsWith(text, '#')) {
       const userId = event.source.userId;
       const user = await client.getProfile(userId);
-      const originName = user.displayName;
-      const [orderName, name, price] = _.chain(text).replace('#', '').split(/[, ._]/i).value();
+      const displayUserName = user.displayName;
+      const [userName, itemName, price] = _.chain(text).replace('#', '').split(/[, ._]+/i).value();
       const order = new OrderModel({
-        orderName,
-        name,
+        userName,
+        itemName,
         price,
-        originName,
+        displayUserName,
         userId,
       });
       await order.save();
     }
-    const result = await client.replyMessage(event.replyToken, { type: 'text', text: event.message.text });
-    return result;
+    
+    return { type: 'text', text: event.message.text };
 }
 
 module.exports = router;
