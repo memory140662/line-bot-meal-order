@@ -22,6 +22,8 @@ router.post('/callback', line.middleware(config), async (req, res) => {
 });
 
 async function handleEvent(event) {
+    console.log('***************************** handle event starting!');
+    console.log(JSON.stringify(event.message, undefined, 2));
     if (event.message.type !== 'text') {
       return Promise.resolve(null);
     }
