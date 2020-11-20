@@ -9,6 +9,8 @@ const config = {
     channelSecret: process.env.CHANNEL_SECRET,
 }
 
+console.log(config);
+
 const client = new line.Client(config);
 
 router.post('/callback', line.middleware(config), async (req, res) => {
