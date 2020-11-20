@@ -7,4 +7,5 @@ module.exports = model('Order', new Schema({
     price: Number,
     userId: String,
     date: { type: Date, default: Date.now() },
+    settlementId: String,
 }));

@@ -1,7 +1,20 @@
 extends layout
 
 block content
-  table(id='order')
+  div
+    select(id='settlement-type' class='custom-select' style='width: 150px;')
+      option(value='0') 全部
+      option(value='1') 本日结算
+      option(value='2') 本日未结算
+
+    button(class='btn btn-primary' type='button' id='settlement' style='margin-left: 10px;') 结算
+  div(class='row' style='margin-top: 50px;')
+    div(class='col-lg-6 col-mg-10 col-sm-12')
+      h3 总清单
+      table(id='order' class='table table-striped')
       
+    div(class='col-lg-6 col-mg-10 col-sm-12')
+      h3 本日结算餐点
+      table(id='statistics' class='table table-striped')
   
   script(src='/javascripts/index.js')
