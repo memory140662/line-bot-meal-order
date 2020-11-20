@@ -13,7 +13,9 @@ console.log(config);
 
 const client = new line.Client(config);
 
-router.post('/callback', line.middleware(config), async (req, res) => {
+router.use('/callback', line.middleware(config));
+
+router.post('/callback', async (req, res) => {
     console.log('***************************** line callback!');
     console.log(JSON.stringify(req.body, undefined, 2));
     Promise
