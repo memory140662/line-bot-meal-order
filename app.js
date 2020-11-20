@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const orderRouter = require('./routes/order');
+const lineRouter = require('./routes/line');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL, {
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/order', orderRouter);
+app.use('/line', lineRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
