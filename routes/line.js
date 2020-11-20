@@ -26,11 +26,11 @@ async function handleEvent(event) {
       return Promise.resolve(null);
     }
     const text = event.message.text;
-    const userId = event.source.userId;
-    const user = await client.getProfile(userId);
-    const originName = user.displayName;
     
     if (_.startsWith(text, '#')) {
+      const userId = event.source.userId;
+      const user = await client.getProfile(userId);
+      const originName = user.displayName;
       const [orderName, name, price] = _.chain(text).replace('#', '').split(/[, ._]/i).value();
       const order = new OrderModel({
         orderName,
@@ -41,8 +41,8 @@ async function handleEvent(event) {
       });
       await order.save();
     }
-    
-    return { type: 'text', text: event.message.text };
+    const result = await client.replyMessage(event.replyToken, { type: 'text', text: event.message.text });
+    return result;
 }
 
 module.exports = router;
